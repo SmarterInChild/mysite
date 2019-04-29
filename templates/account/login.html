@@ -29,7 +29,10 @@
                 {{ form.password }}
             </div>
         </div>
-        <input type="submit" class="bnt bnt-primary bnt-lg" value="登录">
+        <p class="text-muted">
+            <a href="{% url 'account:password_reset' %}">忘记密码?</a>
+        </p>
+        <input type="submit" value="登录" class="btn btn-primary btn-lg">
     </form>
 </div>
 {% endblock %}

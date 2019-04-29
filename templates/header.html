@@ -28,9 +28,17 @@
         </form>
         <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
-                    <li><a href="#">{{ user.username }}</a></li>
+                    <!-- <li><a href="#">{{ user.username }}</a></li> -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                                <li><a href="#">设置</a></li>
+                                <li><a href="{% url 'account:password_change' %}">修改密码</a></li>
+                        </ul>
+                    </li>
                     <li><a href="{% url 'account:user_logout' %}">登出</a></li>
                 {% else %}
+                    <li><a href="{% url 'account:user_register' %}">注册</a></li>
                     <li><a href="{% url 'account:user_login' %}">登录</a></li>
                 {% endif %}
                 <!-- <li class="dropdown">
