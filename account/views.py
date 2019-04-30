@@ -1,9 +1,14 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, RegistrationForm , UserProfileForm
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from .forms import LoginForm, RegistrationForm , UserProfileForm, UserInfoForm, UserForm
+from .models import UserProfile, UserInfo
 from django.conf import settings
 from django.core.mail import send_mail
+from django.views.decorators.csrf import csrf_exempt
+import base64
 
 # Create your views here.
 def user_login(request):
@@ -37,6 +42,7 @@ def register(request):
             new_userprofile = userprofile_form.save(commit=False)
             new_userprofile.user = new_user
             new_userprofile.save()
+            UserInfo.objects.create(user=new_user)
             return HttpResponse("注册成功")
         else:
             return HttpResponse("注册失败")
@@ -44,3 +50,58 @@ def register(request):
         register_form = RegistrationForm()
         userprofile_form = UserProfileForm()
         return render(request, "account/register.html", {"form": register_form, "profile":userprofile_form})
+
+@login_required(login_url='/account/login')
+def myself(request):
+    user = User.objects.get(username=request.user.username)
+    userprofile = UserProfile.objects.get(user=user)
+    userinfo = UserInfo.objects.get(user=user)
+    return render(request, "account/myself.html", {"user": user, "userprofile": userprofile, "userinfo": userinfo})
+
+@login_required(login_url='/account/login')
+def myself_edit(request):
+    user = User.objects.get(username=request.user.username)
+    userprofile = UserProfile.objects.get(user=user)
+    userinfo = UserInfo.objects.get(user=user)
+
+    if request.method == 'POST':
+        post_dict = request.POST.dict()
+        user_form = UserForm(post_dict)
+        userprofile_form = UserProfileForm(post_dict)
+        userinfo_form = UserInfoForm(post_dict)
+        if user_form.is_valid() and userprofile_form.is_valid() and userinfo_form.is_valid():
+            user.email = post_dict['email']
+            userprofile.birth = post_dict['birth']
+            userprofile.phone = post_dict['phone']
+            userinfo.school = post_dict['school']
+            userinfo.company = post_dict['company']
+            userinfo.profession = post_dict['profession']
+            userinfo.address = post_dict['address']
+            userinfo.aboutme = post_dict['aboutme']
+            user.save()
+            userprofile.save()
+            userinfo.save()
+        return HttpResponseRedirect('/account/my-information/')
+    else:
+        user_form = UserForm(instance=request.user)
+        userprofile_form = UserProfileForm(initial={"birth": userprofile.birth, "phone": userprofile.phone})
+        userinfo_form = UserInfoForm(instance=userinfo)
+        return render(request, "account/myself_edit.html", {"user_form": user_form, "userprofile_form": userprofile_form, "userinfo_form": userinfo_form})
+
+@login_required(login_url='/account/login')
+@csrf_exempt
+def my_image(request):
+    if request.method == 'POST':
+        imgedata = request.POST.get('photo')
+        # img_data = post_dict['photo'][0].encode('utf-8').replace('data:image/png;base64,','')
+        # photo_name = request.user.username + '.png'
+        # fh = open(photo_name, "wb")
+        # fh.write(base64.b64decode(img_data))
+        # fh.close()
+        userinfo = UserInfo.objects.get(user=request.user.id)
+        userinfo.photo = imgedata
+        userinfo.save()
+        return HttpResponse("1")
+    else:
+        return render(request, 'account/cropbox.html',)
+
