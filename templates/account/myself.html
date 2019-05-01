@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block title %}My Information{% endblock %}
 {% block content %}
 <div class="row text-center vertical-middle-sm">
@@ -92,4 +93,16 @@
         </div>
     </div>
 </div>
+<script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'js/layer/layer.js' %}"></script>
+<script>
+    function upload_image_layer(){
+        layer.open({
+            title: "头像上传",
+            area: ['650px', '600px'],
+            type: 2,
+            content: "{% url 'account:my_image' %}"
+        });
+    }
+</script>
 {% endblock %}

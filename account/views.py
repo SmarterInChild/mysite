@@ -7,6 +7,7 @@ from .forms import LoginForm, RegistrationForm , UserProfileForm, UserInfoForm, 
 from .models import UserProfile, UserInfo
 from django.conf import settings
 from django.core.mail import send_mail
+from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 import base64
 
@@ -88,18 +89,35 @@ def myself_edit(request):
         userinfo_form = UserInfoForm(instance=userinfo)
         return render(request, "account/myself_edit.html", {"user_form": user_form, "userprofile_form": userprofile_form, "userinfo_form": userinfo_form})
 
+
+#如果发送给图片发送后端是二进制数据可以如下处理
+# @login_required(login_url='/account/login')
+# @csrf_exempt
+# def my_image(request):
+#     if request.method == 'POST':
+#         post_dict = request.POST.dict()
+#         photo_name = request.user.username + '.png'
+#         userinfo = UserInfo.objects.get(user=request.user.id)
+#         userinfo.photo = ContentFile(post_dict['photo'], name=photo_name)
+#         userinfo.save()
+#         return HttpResponse("1")
+#     else:
+#         return render(request, 'account/cropbox.html',)
+
+#如果前段发送图片是base64编码可以如下处理
 @login_required(login_url='/account/login')
 @csrf_exempt
 def my_image(request):
     if request.method == 'POST':
-        imgedata = request.POST.get('photo')
-        # img_data = post_dict['photo'][0].encode('utf-8').replace('data:image/png;base64,','')
-        # photo_name = request.user.username + '.png'
-        # fh = open(photo_name, "wb")
-        # fh.write(base64.b64decode(img_data))
-        # fh.close()
+        post_dict = request.POST.dict()
+        header, data = post_dict['photo'].split(';base64,')
+        try:
+            decode_data = base64.b64decode(data)
+        except TypeError:
+            TypeError('invalid image') 
+        photo_name = request.user.username + '.png'
         userinfo = UserInfo.objects.get(user=request.user.id)
-        userinfo.photo = imgedata
+        userinfo.photo = ContentFile(decode_data, name=photo_name)
         userinfo.save()
         return HttpResponse("1")
     else:

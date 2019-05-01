@@ -87,7 +87,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': '/home/wangdong/run/mysite/root.cnf',
+            'read_default_file': '/home/wangdong/git/mysite/root.cnf',
         },
     }
 }

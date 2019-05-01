@@ -1,8 +1,6 @@
 from django.urls import path, reverse_lazy
 from . import views
-from django.conf import settings
 from django.contrib.auth import views as auth_views
-from django.contrib.staticfiles.urls import static
 
 app_name = 'account'
 urlpatterns = [
@@ -28,4 +26,4 @@ urlpatterns = [
     path('my-information/', views.myself, name="my_information"),
     path('edit-my-information/', views.myself_edit, name="edit_my_information"),
     path('my-image/', views.my_image, name="my_image"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

@@ -56,7 +56,7 @@ $(window).load(function() {
 	$('#btnCrop').on('click', function(){
 		//alert("上传图片");
 		var form_data = new FormData();
-		form_data.append('photo', cropper.image);
+		form_data.append('photo', img);
 		$.ajax({
 			url: "{% url 'account:my_image' %}",
 			method: 'POST',
@@ -64,7 +64,12 @@ $(window).load(function() {
 			processData: false,
 			contentType: false,
 			success: function(e){
-				location.href = "{% url 'account:my_information' %}"
+				//location.href = "{% url 'account:my_information' %}"
+				if(e == "1"){
+					parent.location.reload();
+				}else{
+					alter("图片上传失败")
+				}
 			}
 		})
 	})
