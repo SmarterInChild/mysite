@@ -7,74 +7,74 @@
     <div class="row">
         <div class="col-md-8">
             <div class="row">
-                <div class="col-md-4 text-right">
+                <div class="col-md-4 text-right" style="margin-top: 10px">
                     <span>用户名：</span>
                 </div>
-                <div class="col-md-8 text-left">
+                <div class="col-md-8 text-left" style="margin-top: 10px">
                     {{ user.username }}
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 text-right">
+                <div class="col-md-4 text-right" style="margin-top: 10px">
                     <span>邮箱：</span>
                 </div>
-                <div class="col-md-8 text-left">
+                <div class="col-md-8 text-left" style="margin-top: 10px">
                     {{ user.email }}
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 text-right">
+                <div class="col-md-4 text-right" style="margin-top: 10px">
                     <span>生日：</span>
                 </div>
-                <div class="col-md-8 text-left">
+                <div class="col-md-8 text-left" style="margin-top: 10px">
                     {{ userprofile.birth }}
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 text-right">
+                <div class="col-md-4 text-right" style="margin-top: 10px">
                     <span>电话：</span>
                 </div>
-                <div class="col-md-8 text-left">
+                <div class="col-md-8 text-left" style="margin-top: 10px">
                     {{ userprofile.phone }}
                 </div>
             </div>
             <div class="row">
-                    <div class="col-md-4 text-right">
+                    <div class="col-md-4 text-right" style="margin-top: 10px">
                         <span>毕业学校：</span>
                     </div>
-                    <div class="col-md-8 text-left">
+                    <div class="col-md-8 text-left" style="margin-top: 10px">
                         {{ userinfo.school }}
                     </div>
             </div>
             <div class="row">
-                    <div class="col-md-4 text-right">
+                    <div class="col-md-4 text-right" style="margin-top: 10px">
                         <span>公司：</span>
                     </div>
-                    <div class="col-md-8 text-left">
+                    <div class="col-md-8 text-left" style="margin-top: 10px">
                         {{ userinfo.company }}
                     </div>
             </div>
             <div class="row">
-                    <div class="col-md-4 text-right">
+                    <div class="col-md-4 text-right" style="margin-top: 10px">
                         <span>职业：</span>
                     </div>
-                    <div class="col-md-8 text-left">
+                    <div class="col-md-8 text-left" style="margin-top: 10px">
                         {{ userinfo.profession }}
                     </div>
             </div>
             <div class="row">
-                    <div class="col-md-4 text-right">
+                    <div class="col-md-4 text-right" style="margin-top: 10px">
                         <span>地址：</span>
                     </div>
-                    <div class="col-md-8 text-left">
+                    <div class="col-md-8 text-left" style="margin-top: 10px">
                         {{ userinfo.address }}
                     </div>
             </div>
             <div class="row">
-                    <div class="col-md-4 text-right">
+                    <div class="col-md-4 text-right"style="margin-top: 10px">
                         <span>个人介绍：</span>
                     </div>
-                    <div class="col-md-8 text-left" style="word-break:break-all; word-wrap:break-all;">
+                    <div class="col-md-8 text-left" style="word-break:break-all; word-wrap:break-all; margin-top: 10px;">
                         {{ userinfo.aboutme }}
                     </div>
             </div>
@@ -88,7 +88,7 @@
                 {% else %}
                 <img name="my_face" src="{% static 'images/newton.jpg' %}" class="img-circle" width="250px" height="200px" id="my_photo">
                 {% endif %}
-                <button class="btn btn-primary btn-lg" id="upload_img" onclick="upload_image_layer()">上传我的头像</button>
+                <button style="margin-top:10px;" class="btn btn-primary btn-lg" id="upload_img" onclick="upload_image_layer()">上传我的头像</button>
             </div>
         </div>
     </div>
