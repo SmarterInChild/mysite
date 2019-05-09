@@ -34,5 +34,5 @@ class ArticlePost(models.Model):
         return super(ArticlePost, self).save(*args, **kwargs)
     
     def get_absolute_url(self):
-        return reverse('article:article_detail', args=[self.id, self.slug])
+        return reverse('article:list_article_detail', args=[self.id, self.slug])
     

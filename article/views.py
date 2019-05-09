@@ -124,8 +124,6 @@ def redit_article(request, article_id):
     if request.method == 'GET':
         article_columns = request.user.user_articlecolumn_userid.all()
         article = ArticlePost.objects.get(id=article_id)
-        print('++++++++++++++++++++++++++++++++++++')
-        print(article)
         article_post_form = ArticlePostForm(initial={"title": article.title})
         return render(request, "article/column/redit_article.html", {"article_post_form": article_post_form, "article_columns": article_columns, "article": article})
 

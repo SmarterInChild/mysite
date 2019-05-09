@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, list_views
 
 app_name = 'article'
 urlpatterns = [
@@ -11,4 +11,7 @@ urlpatterns = [
     path('article-detail/<id>/<slug>/', views.article_detail, name="article_detail"),
     path('redit-article/<article_id>/', views.redit_article, name="redit_article"),
     path('del-article/', views.delete_article, name="del_article"),
+
+    path('list-article-titles/', list_views.article_titles, name="article_titles"),
+    path('list-article-detail/<id>/<slug>/', list_views.article_detail, name="list_article_detail"),
 ]
