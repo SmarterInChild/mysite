@@ -16,10 +16,10 @@
                 <td><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></td>
                 <td>{{ article.column }}</td>
                 <td>
-                    <a name="edit" href="javascript:" onclick="edit_column(this, {{ column.id }})">
+                    <a name="edit" href="{% url 'article:redit_article' article.id %}">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
-                    <a name="delete" href="javascript:" onclick="del_column(this, {{ column.id }})">
+                    <a name="delete" href="javascript:" onclick="del_article(this, {{ article.id }})">
                             <span class="glyphicon glyphicon-trash"></span>
                     </a>
                 </td>
@@ -28,5 +28,39 @@
             <p>还没有编写文章</p>
             {% endfor %}
     </table>
+    {% include "article/paginator.html" %}
 </div>
+<script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'js/layer/layer.js' %}"></script>
+<script>
+    function del_article(the, article_id){
+        var article_name = $(the).parents("tr").children("td").eq(1).text();
+        var index = layer.open({
+            title: "删除文章",
+            type: 1,
+            area: ['400px', '200px'],
+            skin: "layui-layer-rim",
+            content: '<div class="text-center" style="margin-top: 40px"><p>确定删除文章《' + article_name +  '》</p></div>',
+            btn: ["确定", "取消"],
+            yes: function(index, layero){
+                $.ajax({
+                    url: "{% url 'article:del_article' %}",
+                    type: "POST",
+                    data: {"article_id": article_id},
+                    success: function(res){
+                        if(res == "1"){
+                            parent.location.reload();
+                            layer.msg(name + "文章已删除");
+                        }else{
+                            layer.msg(name + "文章删除失败")
+                        }
+                    },
+                })
+            },
+            btn2: function(){
+                layer.close(index);
+            }
+        });
+    }
+</script>
 {% endblock %}

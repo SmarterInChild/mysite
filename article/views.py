@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .models import ArticleColumn, ArticlePost
@@ -78,12 +79,66 @@ def article_post(request):
 
 @login_required(login_url='account/login')
 def article_list(request):
-    articles = request.user.user_article_userid.all()
-    for article in articles:
-        print(article.get_absolute_url())
-    return render(request, "article/column/articles.html", {"articles": articles})
+    #articles = request.user.user_article_userid.all()
+    article_list = ArticlePost.objects.filter(author=request.user)
+    paginator = Paginator(article_list, 10)
+    # for article in articles:
+    #     print(article.get_absolute_url())
+    page = request.GET.get('page')
+    try:
+        current_page = paginator.page(page)
+        articles = current_page.object_list
+    except PageNotAnInteger:
+        current_page = paginator.page(1)
+        articles = current_page.object_list
+    except EmptyPage:
+        current_page = paginator.page(paginator.num_pages)
+        articles = current_page.object_list
+    return render(request, "article/column/articles.html", {"articles": articles, "page": current_page})
 
 @login_required(login_url='account/login')
 def article_detail(request, id, slug):
     article = get_object_or_404(ArticlePost, id=id, slug=slug)
     return render(request, "article/column/article_detail.html", {"article": article})
+
+
+@login_required(login_url='account/login')
+@csrf_exempt
+def redit_article(request, article_id):
+    if request.method == 'POST':
+        post_dict = request.POST.dict()
+        article_post_form = ArticlePostForm(post_dict)
+        if article_post_form.is_valid():
+            try:
+                upfate_article = ArticlePost.objects.get(id=article_id)
+                upfate_article.title = post_dict['title']
+                upfate_article.body = post_dict['body']
+                upfate_article.author = request.user
+                upfate_article.column = request.user.user_articlecolumn_userid.get(id=post_dict['column_id'])
+                upfate_article.save()
+                return HttpResponse("1")
+            except:
+                return HttpResponse("2")
+        else:
+            return HttpResponse("3")
+    if request.method == 'GET':
+        article_columns = request.user.user_articlecolumn_userid.all()
+        article = ArticlePost.objects.get(id=article_id)
+        print('++++++++++++++++++++++++++++++++++++')
+        print(article)
+        article_post_form = ArticlePostForm(initial={"title": article.title})
+        return render(request, "article/column/redit_article.html", {"article_post_form": article_post_form, "article_columns": article_columns, "article": article})
+
+
+@login_required(login_url='account/login')
+@require_POST
+@csrf_exempt
+def delete_article(request):
+    post_dict = request.POST.dict()
+    column_id = post_dict['article_id']
+    try:
+        article = ArticlePost.objects.get(id=column_id)
+        article.delete()
+        return HttpResponse("1")
+    except:
+        return HttpResponse("2")
