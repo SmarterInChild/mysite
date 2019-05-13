@@ -7,13 +7,13 @@ def article_titles(request):
     paginator = Paginator(article_titles, 5)
     page = request.GET.get('page')
     try:
-        current_page = paginator.page(page)
+        current_page = paginator.get_page(page)
         articles = current_page.object_list
     except PageNotAnInteger:
-        current_page = paginator.page(1)
+        current_page = paginator.get_page(1)
         articles = current_page.object_list
     except EmptyPage:
-        current_page = paginator.page(paginator.num_pages)
+        current_page = paginator.get_page(paginator.num_pages)
         articles = current_page.object_list
     return render(request, "article/list/article_titles.html", {"articles": articles, "page": current_page})
 

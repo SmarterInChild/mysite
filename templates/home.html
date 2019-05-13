@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+<div class="row text-center vertical-middle-sm">
+    <h1>Why Django?</h1>
+    <h3>人生苦短，我用Python</h3>
+    <h4>With Django, you can take Web applications from concept to launch in a matter of hours. Django takes care of much of the hassle of Web development, so you can focus on writing your app without needing to reinvent the wheel. It’s free and open source.</h5>
+    <img src="{% static '/images/home/home1.png' %}">
+    <img src="{% static '/images/home/home2.png' %}">
+    <img src="{% static '/images/home/home3.png' %}">
+</div>
+{% endblock %}

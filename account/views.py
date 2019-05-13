@@ -8,6 +8,7 @@ from .models import UserProfile, UserInfo
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.files.base import ContentFile
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 import base64
 
@@ -44,7 +45,8 @@ def register(request):
             new_userprofile.user = new_user
             new_userprofile.save()
             UserInfo.objects.create(user=new_user)
-            return HttpResponse("注册成功")
+            #return HttpResponse("注册成功")
+            return HttpResponseRedirect(reverse('account:user_login'))
         else:
             return HttpResponse("注册失败")
     else:

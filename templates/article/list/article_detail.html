@@ -7,8 +7,7 @@
             <h1>{{ article.title }}</h1>
             <p>{{ article.author }}</p>
     </div>
-    <div class="col-md-3"></div>
-    <div class="col-md-9">
+    <div class="col-md-12">
         <link rel="stylesheet" href="{% static 'js/editor/css/editormd.preview.css' %}">
         <div id="editormd-view">
             <textarea  id="append-text" style="display:none;">{{ article.body }}</textarea>

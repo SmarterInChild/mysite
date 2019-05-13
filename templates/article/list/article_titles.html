@@ -11,11 +11,13 @@
         <div class="list-group">
             <a href="{{ article.get_absolute_url }}" class="list-group-item">
                 <h4 class="list-group-item-heading">{{ article.title }}</h4>
-                <p class="list-group-item-text">作者：{{ article.author }}</p>
-                <p class="list-group-item-text">{{ article.body|slice:'50'|linebreaks}}</p>
+                <p class="list-group-item-text">&nbsp;&nbsp;作者：{{ article.author }}</p>
+                <p class="list-group-item-text" style="margin-top:20px">{{ article.body|slice:'50'|linebreaks}}</p>
             </a>
         </div>
     {% endfor %}
-    {% include "article/paginator.html" %}
+    <div class="text-center" style="height: 100px;">
+        {% include "article/paginator.html" %}
+    </div>
 </div>
 {% endblock %}
