@@ -7,7 +7,6 @@
 </div>
 
 <div class="container">
-    <div class="col-md-2"></div>
     <div class="col-md-8">
         {% for article in articles %}
             <div class="list-group">
@@ -18,10 +17,27 @@
                 <p class="list-group-item-text ">概要：<p class="text-muted">{{ article.body|slice:'50'|linebreaks}}</p></p>
             </div>
         {% endfor %}
+        <div class="text-center">
+            {% include "article/paginator.html" %}
+        </div>
     </div>
-    <div class="col-md-2"></div>
-    <div class="text-center col-md-12">
-        {% include "article/paginator.html" %}
+    <div class="col-md-4">
+        <div>
+            {% if userinfo.photo %}
+            <img name="my_face" src="{{ userinfo.photo.url }}" class="img-circle" width="250px" id="my_photo">
+            {% else %}
+            <img name="my_face" src="{% static 'images/newton.jpg' %}" class="img-circle" width="250px" height="200px" id="my_photo">
+            {% endif %}
+        </div>
+        <div>
+            <p>{{ user.username }}</p>
+            {% if userinfo %}
+                <p>{{ userinfo.company }}</p>
+                <p>{{ userinfo.aboutme }}</p>
+            {% else %}
+                <p>这个家伙太懒了，什么也没留下。。</p>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -7,12 +7,14 @@
             <h1>{{ article.title }}</h1>
             <p>{{ article.author }}</p>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
         <link rel="stylesheet" href="{% static 'js/editor/css/editormd.preview.css' %}">
         <div id="editormd-view">
             <textarea  id="append-text" style="display:none;">{{ article.body }}</textarea>
         </div>
     </div>
+    <div class="col-md-2"></div>  
 </div>
 <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
 <script src="{% static 'js/editor/lib/flowchart.min.js' %}"></script>

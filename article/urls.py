@@ -13,5 +13,6 @@ urlpatterns = [
     path('del-article/', views.delete_article, name="del_article"),
 
     path('list-article-titles/', list_views.article_titles, name="article_titles"),
+    path('list-article-titles/<username>/', list_views.article_titles, name="article_titles"),
     path('list-article-detail/<id>/<slug>/', list_views.article_detail, name="list_article_detail"),
 ]
