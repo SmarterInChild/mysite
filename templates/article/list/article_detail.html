@@ -2,16 +2,34 @@
 {% load staticfiles %}
 {% block title %}Article Detail{% endblock %}
 {% block content %}
+{% with total_likes=article.users_like.count users_like=article.users_like.all %}
 <div class="container">
     <div class="row text-center vertical-middle-sm">
             <h1>{{ article.title }}</h1>
-            <p>{{ article.author }}</p>
+            <p>
+                {{ article.author }}
+                <span class="glyphicon glyphicon-thumbs-up" style="margin-left: 20px;"><strong>{{ total_likes }}</strong>like{{ total_likes|pluralize }}</span>
+            </p>
     </div>
     <div class="col-md-2"></div>
     <div class="col-md-8">
         <link rel="stylesheet" href="{% static 'js/editor/css/editormd.preview.css' %}">
         <div id="editormd-view">
             <textarea  id="append-text" style="display:none;">{{ article.body }}</textarea>
+        </div>
+        <div>
+            <p class="text-center">
+                <a href="#"><span onclick="like_article({{ article.id }}, 'like')" class="glyphicon glyphicon-thumbs-up">顶</span></a>
+                &nbsp&nbsp<a href="#"><span onclick="like_article({{ article.id }}, 'unlike')" class="glyphicon glyphicon-thumbs-down">踩</span></a>
+            </p>
+            <p style="margin-left: 30px;">
+                <strong>推荐本文的用户：</strong>
+                {% for user in users_like %}
+                <span>{{ user.username }} </span>
+                {% empty %}
+                    <span class="text-muted">还有没有用户表态</span>
+                {% endfor %}
+            </p>
         </div>
     </div>
     <div class="col-md-2"></div>  
@@ -25,6 +43,7 @@
 <script src="{% static 'js/editor/lib/sequence-diagram.min.js' %}"></script>
 <script src="{% static 'js/editor/lib/underscore.min.js' %}"></script>
 <script src="{% static 'js/editor/editormd.min.js' %}"></script>
+<script src="{% static 'js/layer/layer.js' %}"></script>
 <script>
     $(function(){
         editormd.markdownToHTML("editormd-view", {
@@ -36,5 +55,23 @@
             sequenceDiagram: true
         });
     })
+    function like_article(id, action){
+        $.ajax({
+            url: "{% url 'article:like_article' %}",
+            type: "POST",
+            data: {"id":id, "action":action},
+            success: function(e){
+                console.log(e)
+                if(e == "1"){
+                    layer.msg("感谢点赞！")
+                    window.location.reload();
+                }else{
+                    layer.msg("我会继续努力！")
+                    window.location.reload();
+                }
+            }
+        });
+    }
 </script>
+{% endwith %}
 {% endblock %}

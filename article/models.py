@@ -19,6 +19,7 @@ class ArticlePost(models.Model):
     slug = models.SlugField(max_length=200)
     column = models.ForeignKey(ArticleColumn, related_name="user_article_columnid", on_delete=models.DO_NOTHING)
     body = models.TextField()
+    users_like = models.ManyToManyField(User, related_name="user_article_like", blank=True)
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
 
