@@ -1,11 +1,15 @@
+import redis
 from django.shortcuts import render, get_object_or_404, HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.contrib.auth.models import User
 from .models import ArticleColumn, ArticlePost
+
+r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
 def article_titles(request, username=None):
     if username:
@@ -34,7 +38,16 @@ def article_titles(request, username=None):
 
 def article_detail(request, id, slug):
     article = get_object_or_404(ArticlePost, id=id, slug=slug)
-    return render(request, "article/list/article_detail.html", {"article": article})
+    total_views = r.incr("article:{}:views".format(article.id))
+    #r.zincrby(name='article_ranking', amount=1, value=article.id)
+    r.zincrby('article_ranking', 1, article.id)
+
+
+    article_ranking = r.zrange('article_ranking', 0, -1, desc=True)[:10]
+    article_ranking_ids = [int(id) for id in article_ranking]
+    most_viewed = list(ArticlePost.objects.filter(id__in=article_ranking_ids))
+    most_viewed.sort(key=lambda x: article_ranking_ids.index(x.id))
+    return render(request, "article/list/article_detail.html", {"article": article, "total_views": total_views, "most_viewed": most_viewed})
 
 @login_required(login_url='account/login')
 @require_POST

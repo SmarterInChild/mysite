@@ -150,3 +150,8 @@ EMAIL_HOST_PASSWORD = 'kzjpjdavppwebegi'   #需要授权码
 EMAIL_PORT = 25
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = '123456789@qq.com'   #这里配置和EMAIL_HOST_USER需要一致
+
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0

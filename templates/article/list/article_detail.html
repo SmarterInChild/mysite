@@ -4,15 +4,15 @@
 {% block content %}
 {% with total_likes=article.users_like.count users_like=article.users_like.all %}
 <div class="container">
-    <div class="row text-center vertical-middle-sm">
-            <h1>{{ article.title }}</h1>
-            <p>
-                {{ article.author }}
-                <span class="glyphicon glyphicon-thumbs-up" style="margin-left: 20px;"><strong>{{ total_likes }}</strong>like{{ total_likes|pluralize }}</span>
-            </p>
-    </div>
-    <div class="col-md-2"></div>
     <div class="col-md-8">
+        <div class="row text-center vertical-middle-sm">
+                <h1>{{ article.title }}</h1>
+                <p>
+                    {{ article.author }}
+                    <span class="glyphicon glyphicon-thumbs-up" style="margin-left: 20px;"><strong>{{ total_likes }}</strong>like{{ total_likes|pluralize }}</span>
+                    <span style="margin-left: 20px;"><strong>{{ total_views }}</strong>view{{ total_views|pluralize }}</span>
+                </p>
+        </div>
         <link rel="stylesheet" href="{% static 'js/editor/css/editormd.preview.css' %}">
         <div id="editormd-view">
             <textarea  id="append-text" style="display:none;">{{ article.body }}</textarea>
@@ -32,7 +32,18 @@
             </p>
         </div>
     </div>
-    <div class="col-md-2"></div>  
+    <div class="col-md-4">
+        <div class="row text-center vertical-middle-sm">
+           <p><h3>最受欢迎的文章</h3></p>
+        </div>
+        <ol style="margin-left:25%">
+            {% for article_rank in most_viewed %}
+            <li>
+                <a href="{{ article_rank.get_absolute_url }}">{{ article_rank.title }}</a>
+            </li>
+            {% endfor %}
+        </ol> 
+    </div>  
 </div>
 <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
 <script src="{% static 'js/editor/lib/flowchart.min.js' %}"></script>
