@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from .models import ArticleColumn, ArticlePost
+from .models import ArticleColumn, ArticlePost, Comment
+from .forms import CommentForm
 
 r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
@@ -47,7 +48,19 @@ def article_detail(request, id, slug):
     article_ranking_ids = [int(id) for id in article_ranking]
     most_viewed = list(ArticlePost.objects.filter(id__in=article_ranking_ids))
     most_viewed.sort(key=lambda x: article_ranking_ids.index(x.id))
-    return render(request, "article/list/article_detail.html", {"article": article, "total_views": total_views, "most_viewed": most_viewed})
+
+    if request.method == 'POST':
+        post_dict = request.POST.dict()
+        comment_form = CommentForm(post_dict)
+        if comment_form.is_valid():
+            new_comment = Comment()
+            new_comment.article = article
+            new_comment.commentator = post_dict['commentator']
+            new_comment.body = post_dict['body']
+            new_comment.save()
+    else:
+        comment_form = CommentForm()
+    return render(request, "article/list/article_detail.html", {"article": article, "total_views": total_views, "most_viewed": most_viewed, "comment_form": comment_form})
 
 @login_required(login_url='account/login')
 @require_POST
