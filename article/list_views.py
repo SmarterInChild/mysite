@@ -3,8 +3,8 @@ from django.shortcuts import render, get_object_or_404, HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.conf import settings
+from django.db.models import Count
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .models import ArticleColumn, ArticlePost, Comment
@@ -49,6 +49,9 @@ def article_detail(request, id, slug):
     most_viewed = list(ArticlePost.objects.filter(id__in=article_ranking_ids))
     most_viewed.sort(key=lambda x: article_ranking_ids.index(x.id))
 
+    most_comments = ArticlePost.objects.annotate(total_comments=Count('articlepost_comment_articlepostid')).order_by('-total_comments')[:3]
+
+
     if request.method == 'POST':
         post_dict = request.POST.dict()
         comment_form = CommentForm(post_dict)
@@ -60,7 +63,7 @@ def article_detail(request, id, slug):
             new_comment.save()
     else:
         comment_form = CommentForm()
-    return render(request, "article/list/article_detail.html", {"article": article, "total_views": total_views, "most_viewed": most_viewed, "comment_form": comment_form})
+    return render(request, "article/list/article_detail.html", {"article": article, "total_views": total_views, "most_viewed": most_viewed, "comment_form": comment_form, "most_comments": most_comments})
 
 @login_required(login_url='account/login')
 @require_POST

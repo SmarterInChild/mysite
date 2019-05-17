@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load article_tags %}
 {% block title %}Article Detail{% endblock %}
 {% block content %}
 {% with total_likes=article.users_like.count users_like=article.users_like.all %}
@@ -16,6 +17,8 @@
         <link rel="stylesheet" href="{% static 'js/editor/css/editormd.preview.css' %}">
         <div id="editormd-view">
             <textarea  id="append-text" style="display:none;">{{ article.body }}</textarea>
+            {% comment %} 测试不用前段而用python自定义 markdown tag来处理  {% endcomment %}
+            {% comment %} {{ article.body | markdown }} {% endcomment %}
         </div>
         <div>
             <p class="text-center">
@@ -73,6 +76,22 @@
             </li>
             {% endfor %}
         </ol> 
+        <hr>
+        <div class="row text-center vertical-middle-sm">
+            <p><h4>最新发布的文章</h4></p>
+        </div>
+        {% latest_articles 5 %}
+        <hr>
+        <div class="row text-center vertical-middle-sm">
+            <p><h4>最多评论的文章</h4></p>
+         </div>
+         <ul style="margin-left:25%">
+             {% for article_comment in most_comments %}
+             <li>
+                 <a href="{{ article_comment.get_absolute_url }}">{{ article_comment.title }}</a>
+             </li>
+             {% endfor %}
+         </ul> 
     </div>  
 </div>
 <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
@@ -101,7 +120,7 @@
         }
         return cookieValue;
     }
-    $(function(){
+     $(function(){
         editormd.markdownToHTML("editormd-view", {
             htmlDecode: "style, script, iframe",
             emoji: true,
