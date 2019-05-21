@@ -30,6 +30,20 @@
             </div>
             <div class="form-group">
                     <label class="col-md-2 control-label text-right">
+                            <span>文章标签:</span>
+                    </label>
+                    <div class="col-md-10 text-left">
+                        {% for tag in article_tags %}
+                        <label class="checkbox-inline">
+                            <input type="checkbox" class="tagcheckbox" id="{{ tag.id }}" name="article_tag" value="{{ tag.tag }}">{{ tag.tag }}
+                        </label>
+                        {% empty %}
+                            <p>您还没有任何标签可选择</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            <div class="form-group">
+                    <label class="col-md-2 control-label text-right">
                         <span>内容:</span>
                     </label>
                     <div id="editormd" class="col-md-10 text-left">
@@ -49,10 +63,12 @@
         var title = $('#id_title').val();
         var column_id = $('#selected_column').val();
         var body = $('#id_body').val();
+        var article_tags = [];
+        $.each($("input[name='article_tag']:checked"), function(){article_tags.push($(this).val());});
         $.ajax({
             url: "{% url 'article:redit_article' article.id %}",
             type: "POST",
-            data: {"title": title, "body": body, "column_id": column_id},
+            data: {"title": title, "body": body, "column_id": column_id, "tags": JSON.stringify(article_tags)},
             success: function(e){
                 if(e == "1"){
                     layer.msg("发布成功！");

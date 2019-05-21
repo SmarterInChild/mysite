@@ -13,6 +13,9 @@
                     <span class="glyphicon glyphicon-thumbs-up" style="margin-left: 20px;"><strong>{{ total_likes }}</strong>like{{ total_likes|pluralize }}</span>
                     <span style="margin-left: 20px;"><strong>{{ total_views }}</strong>view{{ total_views|pluralize }}</span>
                 </p>
+                <p>
+                    <span><strong>标签：</strong>{{ article.article_tag.all | join:"," }}</span>    
+                </p>
         </div>
         <link rel="stylesheet" href="{% static 'js/editor/css/editormd.preview.css' %}">
         <div id="editormd-view">
@@ -92,6 +95,19 @@
              </li>
              {% endfor %}
          </ul> 
+         <hr>
+         <div class="row text-center vertical-middle-sm">
+             <p><h4>推荐相似文章</h4></p>
+          </div>
+          <ul style="margin-left:25%">
+              {% for similar_article in similar_articles %}
+              <li>
+                  <a href="{{ similar_article.get_absolute_url }}">{{ similar_article.title }}</a>
+              </li>
+              {% empty %}
+              <p>没有相似文章</p>
+              {% endfor %}
+          </ul> 
     </div>  
 </div>
 <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>

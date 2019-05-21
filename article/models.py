@@ -5,6 +5,15 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 # Create your models here.
 
+
+class ArticleTag(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_articletag_userid")
+    tag = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.tag
+
+
 class ArticleColumn(models.Model):
     user = models.ForeignKey(User, related_name='user_articlecolumn_userid', on_delete=models.CASCADE)
     column = models.CharField(max_length=200)
@@ -20,6 +29,7 @@ class ArticlePost(models.Model):
     column = models.ForeignKey(ArticleColumn, related_name="user_article_columnid", on_delete=models.DO_NOTHING)
     body = models.TextField()
     users_like = models.ManyToManyField(User, related_name="user_article_like", blank=True)
+    article_tag = models.ManyToManyField(ArticleTag, related_name="articletags", blank=True)
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
 
@@ -49,4 +59,4 @@ class Comment(models.Model):
     def __str__(self):
         return "Comment by {0} on {1}".format(self.commentator, self.article)
 
-    
+
